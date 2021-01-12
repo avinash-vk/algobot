@@ -22,12 +22,19 @@ client.on('ready', () => {
 client.on('message', msg => {
   if (msg && msg.content[0] === ";"){
     let content = msg.content.substring(1).trim().toLowerCase();
-    if (content === "intro") {
-      msg.reply(REPLIES.intro);
-    }
-    else if (content === "dm") {
-      msg.react("♋");
-      msg.author.send(REPLIES.dm);
+    switch(content){
+      case "intro":
+        msg.channel.send(REPLIES.intro);
+        break;
+      case "help":
+        msg.channel.send(REPLIES.help);
+        break;
+      case "dm":
+        msg.react("♋");
+        msg.author.send(REPLIES.dm);
+        break;
+      default:
+        msg.reply(REPLIES.default);
     }
   }
 });
