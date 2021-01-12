@@ -3,7 +3,7 @@ const REPLIES = {
   dm:"Howdy, how's your day going?",
   help:"Well I'm still under development. Help me help you more by helping yourself.",
   default:"I didn't quite get you there, master. Would you be down to break it into something I could better interpret?\nIf you're not sure what this is about, type `;help` and know more about me!",
-  
+  challenge_me:"I am proud that you've challenged yourself into solving that one more question. Remember every second you contribute to this feat matters, and I hope you gain nothing but motivation to do more,to do better.\n"
 }
 
 module.exports = REPLIES

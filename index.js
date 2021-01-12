@@ -10,7 +10,8 @@ client.login(process.env.DISCORD_TOKEN);
 
 // Custom bot replies
 const REPLIES = require("./replies.js");
-
+const EMBEDS = require("./embeds.js");
+const getRandomProblem = require("./leetcodeScraper.js");
 /*
   *********** BOT COMMANDS ************
 */
@@ -19,7 +20,7 @@ client.on('ready', () => {
   console.log(`BOT READY!`);
 });
 
-client.on('message', msg => {
+client.on('message', async msg => {
   if (msg && msg.content[0] === ";"){
     let content = msg.content.substring(1).trim().toLowerCase();
     switch(content){
@@ -32,6 +33,14 @@ client.on('message', msg => {
       case "dm":
         msg.react("♋");
         msg.author.send(REPLIES.dm);
+        break;
+      case "challenge-me":
+      case "challenge me":
+        msg.react("🖖🏻");
+        const question = await getRandomProblem();
+        console.log(question);
+        msg.author.send(REPLIES.challenge_me);
+        msg.author.send(EMBEDS.questionEmbed({...question}));
         break;
       default:
         msg.reply(REPLIES.default);
