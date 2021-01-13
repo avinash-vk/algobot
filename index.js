@@ -66,7 +66,13 @@ client.on('message', async msg => {
       case "my-status":
       case "my status":
         msg.react("🎯");
-        let contentx = await firebase.GET_USER_STATUS(msg.author.id);
+        try {
+          let {score,solved_count} = await firebase.GET_USER_STATUS(msg.author.id);
+          msg.reply(`Your status is:\nScore:${score}\nQuestions Solved:${solved_count}`)
+        }
+        catch(err){
+          message.reply("Looks like you haven't really gotten around solving anything yet. Don't give up")
+        }
         break;
       case content.startsWith("stuck")?content: '':
         msg.react("👩‍⚕️");
