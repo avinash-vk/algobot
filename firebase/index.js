@@ -18,16 +18,34 @@ const SOLVED_QUESTION = async (question_id, user_id, score) => {
   })
   await questions.doc(question_id).update({
     id: question_id,
-    `solved_by.${user_id}`:true
+    [`solved_by.${user_id}`]:true
   })
 }
 
 const GET_USER_STATUS = async (user_id) => {
-  let data = await users.doc(user_id).get();
-  return data;
+  return await users.doc(user_id).get().then(doc => {
+    if(doc.exists){
+      return data;
+    }
+    else {
+      return null;
+    }
+  }).catch(err => console.log(err));
 }
 
 const GET_QUESTION_STATUS = async (question_id) => {
-  let data = await users.doc(user_id).get();
-  return data;
+  return await questions.doc(question_id).get().then(doc => {
+    if(doc.exists){
+      return data;
+    }
+    else {
+      return null;
+    }
+  }).catch(err => console.log(err));
+}
+
+module.exports = {
+  GET_USER_STATUS,
+  GET_QUESTION_STATUS,
+  SOLVED_QUESTION
 }

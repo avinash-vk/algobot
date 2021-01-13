@@ -12,6 +12,10 @@ client.login(process.env.DISCORD_TOKEN);
 const REPLIES = require("./replies.js");
 const EMBEDS = require("./embeds.js");
 const getRandomProblem = require("./leetcodeScraper.js");
+
+// Firebase database config
+const firebase = require("./firebase");
+
 /*
   *********** BOT COMMANDS ************
 */
@@ -59,6 +63,36 @@ client.on('message', async msg => {
           });
         }
         break;
+      case "my-status":
+      case "my status":
+        msg.react("🎯");
+        let content = await firebase.GET_USER_STATUS(msg.author.id);
+        console.log(content);
+        break;
+      case content.startsWith("stuck")?content: '':
+        msg.react("👩‍⚕️");
+        if (msg.channel.type === "dm"){
+          msg.reply(REPLIES.question_dm);
+        }
+        else{
+          try {
+            let qno = content.split()[1];
+            let content = await firebase.GET_QUESTION_STATUS(qno);
+            if (!content || !content.solved_by){
+              throw "content not found"
+            }
+            else{
+              let solvers = content.solved_by.filter(solver => msg.guild.members.cache.exists("id",solver));
+              if (!solvers)
+                throw "noone's solved it"
+              else
+                msg.channel.send(`Question solved by:${solvers}`);
+            }
+          }
+          catch(err) {
+            msg.reply(REPLIES.question_error)
+          }
+        }
       default:
         msg.reply(REPLIES.default);
     }
