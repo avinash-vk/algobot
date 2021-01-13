@@ -26,7 +26,6 @@ const leaderboardEmbed = (usernames, scores, solved, msg) => {
 		scoresStr += `\`${scores[i]}\`\n`;
 		solvedStr += `\`${solved[i]}\`\n`;
 	}
-
 	return new Discord.MessageEmbed()
 		.setAuthor(`Leaderboard for ${msg.guild.name}`, msg.guild.iconURL({ dynamic: true }))
 		.setColor("#051267")
@@ -35,8 +34,22 @@ const leaderboardEmbed = (usernames, scores, solved, msg) => {
 			{ name: 'Questions-solved', value: solvedStr, inline: true });
 }
 
+const statusEmbed = (user, msg, solved_count, score) => {
+		const {id, username, nickname} = user;
+		return new Discord.MessageEmbed()
+			.setTitle(msg.channel.type == "dm" ? "" : msg.guild.member(id).nickname)
+			.setDescription(username)
+			.setAuthor("Status Update", msg.author.avatarURL())
+			.setColor("#d91c1c")
+			.addFields(
+				{ name: 'Score', value: score, inline: true },
+				{ name: 'Questions-solved', value: solved_count, inline: true }
+			);
+}
+
 const EMBEDS = {
   questionEmbed,
-	leaderboardEmbed
+	leaderboardEmbed,
+	statusEmbed
 };
 module.exports = EMBEDS;

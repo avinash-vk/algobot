@@ -68,10 +68,11 @@ client.on('message', async msg => {
         msg.react("🎯");
         try {
           let {score,solved_count} = await firebase.GET_USER_STATUS(msg.author.id);
-          msg.reply(`Your status is:\nScore:${score}\nQuestions Solved:${solved_count}`)
+          let user = await client.users.fetch(msg.author.id);
+          msg.channel.send(EMBEDS.statusEmbed(user, msg, solved_count, score));
         }
         catch(err){
-          message.reply("Looks like you haven't really gotten around solving anything yet. Don't give up")
+          msg.reply("Looks like you haven't really gotten around solving anything yet. Don't give up")
         }
         break;
       case content.startsWith("stuck")?content: '':
