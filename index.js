@@ -50,7 +50,6 @@ client.on('message', async msg => {
         }
         else{
           msg.react("🖖🏻");
-          console.log(msg.guild.members)
           question = await getRandomProblem();
           msg.guild.members && msg.guild.members.cache.forEach(member => {
             if (member.id != client.user.id && !member.user.bot){

@@ -21,3 +21,13 @@ const SOLVED_QUESTION = async (question_id, user_id, score) => {
     `solved_by.${user_id}`:true
   })
 }
+
+const GET_USER_STATUS = async (user_id) => {
+  let data = await users.doc(user_id).get();
+  return data;
+}
+
+const GET_QUESTION_STATUS = async (question_id) => {
+  let data = await users.doc(user_id).get();
+  return data;
+}
