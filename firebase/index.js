@@ -7,4 +7,17 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-module.exports = db;
+const users = db.collection("users");
+const questions = db.collection("questions");
+
+const SOLVED_QUESTION = async (question_id, user_id, score) => {
+  await users.child(user_id).update({
+    id: user_id,
+    solved_count: db.FieldValue.increment(1),
+    score: db.FieldValue.increment(score),
+  })
+  await questions.doc(question_id).update({
+    id: question_id,
+    `solved_by.${user_id}`:true
+  })
+}
