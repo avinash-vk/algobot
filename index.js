@@ -22,6 +22,7 @@ client.on('ready', () => {
 
 client.on('message', async msg => {
   if (msg && msg.content[0] === ";"){
+    let question;
     let content = msg.content.substring(1).trim().toLowerCase();
     switch(content){
       case "intro":
@@ -37,10 +38,27 @@ client.on('message', async msg => {
       case "challenge-me":
       case "challenge me":
         msg.react("🖖🏻");
-        const question = await getRandomProblem();
-        console.log(question);
+        question = await getRandomProblem();
         msg.author.send(REPLIES.challenge_me);
         msg.author.send(EMBEDS.questionEmbed({...question}));
+        break;
+      case "challenge-all":
+      case "challenge all":
+        if (msg.channel.type === "dm"){
+          msg.react("👎🏻");
+          msg.reply(REPLIES.challenge_all_error);
+        }
+        else{
+          msg.react("🖖🏻");
+          console.log(msg.guild.members)
+          question = await getRandomProblem();
+          msg.guild.members && msg.guild.members.cache.forEach(member => {
+            if (member.id != client.user.id && !member.user.bot){
+              member.send(REPLIES.challenge_all);
+              member.send(EMBEDS.questionEmbed({...question}));
+            }
+          });
+        }
         break;
       default:
         msg.reply(REPLIES.default);
