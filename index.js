@@ -66,8 +66,7 @@ client.on('message', async msg => {
       case "my-status":
       case "my status":
         msg.react("🎯");
-        let content = await firebase.GET_USER_STATUS(msg.author.id);
-        console.log(content);
+        let contentx = await firebase.GET_USER_STATUS(msg.author.id);
         break;
       case content.startsWith("stuck")?content: '':
         msg.react("👩‍⚕️");
@@ -76,23 +75,66 @@ client.on('message', async msg => {
         }
         else{
           try {
-            let qno = content.split()[1];
-            let content = await firebase.GET_QUESTION_STATUS(qno);
+            let qno = content.split(" ")[1];
+            content = await firebase.GET_QUESTION_STATUS(qno);
             if (!content || !content.solved_by){
               throw "content not found"
             }
             else{
-              let solvers = content.solved_by.filter(solver => msg.guild.members.cache.exists("id",solver));
+              let solvers = await Promise.all(Object.keys(content.solved_by)
+                                  .filter( solver => msg.guild.member(solver)?true:false)
+                                  .map( async id => {
+                                      let user = await client.users.fetch(id);
+                                      return user.username;
+                                  }));
               if (!solvers)
                 throw "noone's solved it"
-              else
-                msg.channel.send(`Question solved by:${solvers}`);
+              else{
+                console.log(solvers);
+                msg.channel.send(`Question solved by:\n - ${solvers}`);
+              }
+
             }
           }
           catch(err) {
+            console.log(err)
             msg.reply(REPLIES.question_error)
           }
         }
+        break;
+      case content.startsWith("solved")?content: '':
+        try {
+          let qno = content.split(" ")[1];
+          if (!qno){
+            throw "content not found"
+          }
+          else{
+            msg.react("🤙");
+            // TODO: Add score based on difficulty
+            await firebase.SOLVE_QUESTION(qno, msg.author.id, 10);
+          }
+        }
+        catch(err) {
+          console.log(err)
+          msg.reply(REPLIES.question_error)
+        }
+        break;
+      case content.startsWith("unsolved")?content: '':
+        try {
+          let qno = content.split(" ")[1];
+          if (!qno){
+            throw "content not found"
+          }
+          else{
+            msg.react("💪");
+            // Add score based on difficulty
+            await firebase.UNSOLVE_QUESTION(qno, msg.author.id, 10);
+          }
+        }
+        catch(err) {
+          msg.reply(REPLIES.question_error)
+        }
+        break;
       default:
         msg.reply(REPLIES.default);
     }

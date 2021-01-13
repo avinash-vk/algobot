@@ -10,22 +10,44 @@ const db = admin.firestore();
 const users = db.collection("users");
 const questions = db.collection("questions");
 
-const SOLVED_QUESTION = async (question_id, user_id, score) => {
-  await users.child(user_id).update({
+const SOLVE_QUESTION = async (question_id, user_id, score) => {
+  // TODO : CLEAN THIS CODE FFS, DISGUSTING.
+  await users.doc(user_id).set({
     id: user_id,
-    solved_count: db.FieldValue.increment(1),
-    score: db.FieldValue.increment(score),
+  })
+  await users.doc(user_id).update({
+    solved_count: admin.firestore.FieldValue.increment(1),
+    score: admin.firestore.FieldValue.increment(score),
+  })
+  await questions.doc(question_id).set({
+    id: question_id,
   })
   await questions.doc(question_id).update({
-    id: question_id,
     [`solved_by.${user_id}`]:true
+  })
+}
+
+const UNSOLVE_QUESTION = async (question_id, user_id, score) => {
+  // TODO : CLEAN THIS CODE FFS HIGHEST PRIORITY
+  await users.doc(user_id).set({
+    id: user_id,
+  })
+  await users.doc(user_id).update({
+    solved_count: admin.firestore.FieldValue.increment(-1),
+    score: admin.firestore.FieldValue.increment(-score),
+  })
+  await questions.doc(question_id).set({
+    id: question_id,
+  })
+  await questions.doc(question_id).update({
+    [`solved_by.${user_id}`]:false
   })
 }
 
 const GET_USER_STATUS = async (user_id) => {
   return await users.doc(user_id).get().then(doc => {
     if(doc.exists){
-      return data;
+      return doc.data();
     }
     else {
       return null;
@@ -36,7 +58,7 @@ const GET_USER_STATUS = async (user_id) => {
 const GET_QUESTION_STATUS = async (question_id) => {
   return await questions.doc(question_id).get().then(doc => {
     if(doc.exists){
-      return data;
+      return doc.data();
     }
     else {
       return null;
@@ -47,5 +69,6 @@ const GET_QUESTION_STATUS = async (question_id) => {
 module.exports = {
   GET_USER_STATUS,
   GET_QUESTION_STATUS,
-  SOLVED_QUESTION
+  SOLVE_QUESTION,
+  UNSOLVE_QUESTION
 }

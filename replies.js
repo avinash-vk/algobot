@@ -5,7 +5,9 @@ const REPLIES = {
   default:"I didn't quite get you there, master. Would you be down to break it into something I could better interpret?\nIf you're not sure what this is about, type `;help` and know more about me!",
   challenge_me:"I am proud that you've challenged yourself into solving that one more question. Remember every second you contribute to this feat matters, and I hope you gain nothing but motivation to do more,to do better.\n",
   challenge_all:"You have been challenged! Check this question out and see if you can solve it! Remember practice makes you perfect.It's worth it.",
-  challenge_all_error:"This command is only allowed access from a group server, and is not allowed via private texts. Go to a server where the bot's active to check if server is active"
+  challenge_all_error:"This command is only allowed access from a group server, and is not allowed via private texts. Go to a server where the bot's active to check if server is active",
+  question_dm:"Well don't give up on this. We sure can help you fix it. If you wanna look into your friends to fix this, Go into one of your servers and checkout who's solved it!",
+  question_error:"Looks like either the question code is wrong or no one really has solved it :) Keep pushing!",
 }
 
 module.exports = REPLIES
