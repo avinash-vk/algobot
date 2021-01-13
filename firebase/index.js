@@ -12,16 +12,24 @@ const questions = db.collection("questions");
 
 const SOLVE_QUESTION = async (question_id, user_id, score) => {
   // TODO : CLEAN THIS CODE FFS, DISGUSTING.
-  await users.doc(user_id).set({
-    id: user_id,
-  })
+  let check = await users.doc(user_id).get();
+  if (!check.exists){
+    await users.doc(user_id).set({
+      id: user_id,
+    })
+  }
   await users.doc(user_id).update({
     solved_count: admin.firestore.FieldValue.increment(1),
     score: admin.firestore.FieldValue.increment(score),
   })
-  await questions.doc(question_id).set({
-    id: question_id,
-  })
+
+  check = await questions.doc(question_id).get();
+  if (!check.exists){
+    await questions.doc(question_id).set({
+      id: question_id,
+    })
+  }
+
   await questions.doc(question_id).update({
     [`solved_by.${user_id}`]:true
   })
@@ -29,16 +37,22 @@ const SOLVE_QUESTION = async (question_id, user_id, score) => {
 
 const UNSOLVE_QUESTION = async (question_id, user_id, score) => {
   // TODO : CLEAN THIS CODE FFS HIGHEST PRIORITY
-  await users.doc(user_id).set({
-    id: user_id,
-  })
+  let check = await users.doc(user_id).get();
+  if (!check.exists){
+    await users.doc(user_id).set({
+      id: user_id,
+    })
+  }
   await users.doc(user_id).update({
     solved_count: admin.firestore.FieldValue.increment(-1),
     score: admin.firestore.FieldValue.increment(-score),
   })
-  await questions.doc(question_id).set({
-    id: question_id,
-  })
+  check = await questions.doc(question_id).get();
+  if (!check.exists){
+    await questions.doc(question_id).set({
+      id: question_id,
+    })
+  }
   await questions.doc(question_id).update({
     [`solved_by.${user_id}`]:false
   })
@@ -66,9 +80,16 @@ const GET_QUESTION_STATUS = async (question_id) => {
   }).catch(err => console.log(err));
 }
 
+const GET_LEADERBOARD = async (user_ids) => {
+  return await users.where("id","in",user_ids).get().then(docs => {
+    return docs.docs.map(doc => doc.data());
+  }).catch(err => console.log(err));
+}
+
 module.exports = {
   GET_USER_STATUS,
   GET_QUESTION_STATUS,
   SOLVE_QUESTION,
-  UNSOLVE_QUESTION
+  UNSOLVE_QUESTION,
+  GET_LEADERBOARD
 }

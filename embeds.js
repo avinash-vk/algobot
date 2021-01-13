@@ -18,7 +18,25 @@ const questionEmbed = ({id,link,title,difficulty}) => new Discord.MessageEmbed()
       ?"```fix\nMedium```"
       :"```prolog\nHard```")
 
+
+const leaderboardEmbed = (usernames, scores, solved, msg) => {
+	let usernamesStr="", scoresStr="", solvedStr="";
+	for (let i = 0; i< usernames.length; i++) {
+		usernamesStr += `\`${i + 1}\` ${usernames[i]}\n`;
+		scoresStr += `\`${scores[i]}\`\n`;
+		solvedStr += `\`${solved[i]}\`\n`;
+	}
+
+	return new Discord.MessageEmbed()
+		.setAuthor(`Leaderboard for ${msg.guild.name}`, msg.guild.iconURL({ dynamic: true }))
+		.setColor("#051267")
+		.addFields({ name: 'User', value: usernamesStr, inline: true },
+			{ name: 'Score', value: scoresStr, inline: true },
+			{ name: 'Questions-solved', value: solvedStr, inline: true });
+}
+
 const EMBEDS = {
-  questionEmbed
+  questionEmbed,
+	leaderboardEmbed
 };
 module.exports = EMBEDS;

@@ -141,6 +141,25 @@ client.on('message', async msg => {
           msg.reply(REPLIES.question_error)
         }
         break;
+      case "leaderboard":
+      case "status-all":
+      case "status all":
+        msg.react("👩‍⚕️");
+        if (msg.channel.type === "dm"){
+          msg.reply(REPLIES.question_dm);
+        }
+        else {
+          let members = msg.guild.members && msg.guild.members.cache.map(
+            member => member.id
+          );
+          let stats = await firebase.GET_LEADERBOARD(members);
+          stats.sort((a,b)=>a.score>b.score?1:-1);
+          let usernames = await Promise.all(stats.map(async stat => (await client.users.fetch(stat.id)).username))
+          let scores = stats.map(stat => stat.score);
+          let solved = stats.map(stat => stat.solved_count);
+          msg.channel.send(EMBEDS.leaderboardEmbed(usernames,scores,solved,msg));
+        }
+        break;
       default:
         msg.reply(REPLIES.default);
     }
