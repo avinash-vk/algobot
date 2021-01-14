@@ -8,6 +8,8 @@ const REPLIES = {
   challenge_all_error:"This command is only allowed access from a group server, and is not allowed via private texts. Go to a server where the bot's active to check if server is active",
   question_dm:"Well don't give up on this. We sure can help you fix it. If you wanna look into your friends to fix this, Go into one of your servers and checkout who's solved it!",
   question_error:"Looks like either the question code is wrong or no one really has solved it :) Keep pushing!",
+  question_solve:"Wow, that's freaking great work. Keep grinding and keep it going.",
+  question_unsolve:"Oof, that's alright. Things may not go your way always. Feel free to reach out to people in your discord servers who have solved this. Let's get that bread baby!",
 }
 
 module.exports = REPLIES

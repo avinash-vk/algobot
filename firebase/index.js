@@ -18,21 +18,22 @@ const SOLVE_QUESTION = async (question_id, user_id, score) => {
       id: user_id,
     })
   }
-  await users.doc(user_id).update({
-    solved_count: admin.firestore.FieldValue.increment(1),
-    score: admin.firestore.FieldValue.increment(score),
-  })
-
   check = await questions.doc(question_id).get();
   if (!check.exists){
     await questions.doc(question_id).set({
       id: question_id,
     })
   }
-
-  await questions.doc(question_id).update({
-    [`solved_by.${user_id}`]:true
-  })
+  let question = (await questions.doc(question_id).get()).data()
+  if (!question[`solved_by.${user_id}`]){
+    await questions.doc(question_id).update({
+      [`solved_by.${user_id}`]:true
+    })
+    await users.doc(user_id).update({
+      solved_count: admin.firestore.FieldValue.increment(1),
+      score: admin.firestore.FieldValue.increment(score),
+    })
+  }
 }
 
 const UNSOLVE_QUESTION = async (question_id, user_id, score) => {
@@ -43,19 +44,23 @@ const UNSOLVE_QUESTION = async (question_id, user_id, score) => {
       id: user_id,
     })
   }
-  await users.doc(user_id).update({
-    solved_count: admin.firestore.FieldValue.increment(-1),
-    score: admin.firestore.FieldValue.increment(-score),
-  })
+
   check = await questions.doc(question_id).get();
   if (!check.exists){
     await questions.doc(question_id).set({
       id: question_id,
     })
   }
-  await questions.doc(question_id).update({
-    [`solved_by.${user_id}`]:false
-  })
+  let question = (await questions.doc(question_id).get()).data()
+  if (question[`solved_by.${user_id}`] != false){
+    await questions.doc(question_id).update({
+      [`solved_by.${user_id}`]:false
+    })
+    await users.doc(user_id).update({
+      solved_count: admin.firestore.FieldValue.increment(-1),
+      score: admin.firestore.FieldValue.increment(-score),
+    })
+  }
 }
 
 const GET_USER_STATUS = async (user_id) => {

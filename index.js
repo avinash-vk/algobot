@@ -42,27 +42,27 @@ client.on('message', async msg => {
       case "challenge-me":
       case "challenge me":
         msg.react("🖖🏻");
-        question = await getRandomProblem();
+        random_question = await getRandomProblem();
         msg.author.send(REPLIES.challenge_me);
-        msg.author.send(EMBEDS.questionEmbed({...question})).then(question => {
+        msg.author.send(EMBEDS.questionEmbed({...random_question})).then(question => {
           question.react("✅");
           question.react("❌");
           const filter = (reaction, user) => {
-              return reaction.emoji.name == '✅' || reaction.emoji.name == '❌';
+              return (reaction.emoji.name == '✅' || reaction.emoji.name == '❌') && user.id != question.author.id;
           }
           const collector = question.createReactionCollector(filter, { time: 10800000 });
-          collector.on('collect', (reaction, user) => {
+          collector.on('collect', async (reaction, user) => {
             let emoji = reaction.emoji;
             if (emoji.name == '✅') {
-                question.reply("YOU TICKED");
+                question.reply(REPLIES.question_solve);
+                await firebase.SOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
             }
             else if (emoji.name == '❌') {
-                question.reply("YOU WRONGED");
+                question.reply(REPLIES.question_unsolve);
+                await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
             }
           });
         });
-
-
         break;
       case "challenge-all":
       case "challenge all":
