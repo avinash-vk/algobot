@@ -44,7 +44,25 @@ client.on('message', async msg => {
         msg.react("🖖🏻");
         question = await getRandomProblem();
         msg.author.send(REPLIES.challenge_me);
-        msg.author.send(EMBEDS.questionEmbed({...question}));
+        msg.author.send(EMBEDS.questionEmbed({...question})).then(question => {
+          question.react("✅");
+          question.react("❌");
+          const filter = (reaction, user) => {
+              return reaction.emoji.name == '✅' || reaction.emoji.name == '❌';
+          }
+          const collector = question.createReactionCollector(filter, { time: 10800000 });
+          collector.on('collect', (reaction, user) => {
+            let emoji = reaction.emoji;
+            if (emoji.name == '✅') {
+                question.reply("YOU TICKED");
+            }
+            else if (emoji.name == '❌') {
+                question.reply("YOU WRONGED");
+            }
+          });
+        });
+
+
         break;
       case "challenge-all":
       case "challenge all":
@@ -59,6 +77,8 @@ client.on('message', async msg => {
             if (member.id != client.user.id && !member.user.bot){
               member.send(REPLIES.challenge_all);
               member.send(EMBEDS.questionEmbed({...question}));
+              msg.react("✅");
+              msg.react("❌");
             }
           });
         }

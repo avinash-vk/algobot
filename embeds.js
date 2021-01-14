@@ -17,7 +17,9 @@ const questionEmbed = ({id,link,title,difficulty}) => new Discord.MessageEmbed()
       :difficulty===2
       ?"```fix\nMedium```"
       :"```prolog\nHard```")
-
+	.addFields(
+		{ name:"...\n", value:"✅ - I solved all the test cases\n\n❌ - I couldn't find a solution to the problem",inline:true},
+	)
 
 const leaderboardEmbed = (usernames, scores, solved, msg) => {
 	let usernamesStr="", scoresStr="", solvedStr="";
@@ -52,4 +54,5 @@ const EMBEDS = {
 	leaderboardEmbed,
 	statusEmbed
 };
+
 module.exports = EMBEDS;
