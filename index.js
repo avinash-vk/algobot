@@ -91,9 +91,10 @@ client.on('message', async msg => {
                       question.reply(REPLIES.question_unsolve);
                       await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
                   }
-                });
               });
-        }
+            })
+          }
+        })}
         break;
       case "my-status":
       case "my status":
@@ -126,13 +127,9 @@ client.on('message', async msg => {
                                       let user = await client.users.fetch(id);
                                       return user.username;
                                   }));
-              if (!solvers)
-                throw "noone's solved it"
-              else{
-                console.log(solvers);
-                msg.channel.send(`Question solved by:\n - ${solvers}`);
-              }
 
+                msg.channel.send(EMBEDS.stuckEmbed(solvers, qno));
+                msg.channel.send(REPLIES.stuck)
             }
           }
           catch(err) {

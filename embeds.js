@@ -49,10 +49,19 @@ const statusEmbed = (user, msg, solved_count, score) => {
 			);
 }
 
+const stuckEmbed = (users, qno) => {
+	return new Discord.MessageEmbed()
+		.setColor("#f4f4f4")
+		.addFields(
+			{ name: `Question #${qno} solved by:`, value: users}
+		);
+}
+
 const EMBEDS = {
   questionEmbed,
 	leaderboardEmbed,
-	statusEmbed
+	statusEmbed,
+	stuckEmbed
 };
 
 module.exports = EMBEDS;
