@@ -11,7 +11,7 @@ client.login(process.env.DISCORD_TOKEN);
 // Custom bot replies
 const REPLIES = require("./replies.js");
 const EMBEDS = require("./embeds.js");
-const getRandomProblem = require("./leetcodeScraper.js");
+const {getRandomProblem, getRandomProblems} = require("./leetcodeScraper.js");
 
 // Firebase database config
 const firebase = require("./firebase");
@@ -209,6 +209,20 @@ client.on('message', async msg => {
           let scores = stats.map(stat => stat.score);
           let solved = stats.map(stat => stat.solved_count);
           msg.channel.send(EMBEDS.leaderboardEmbed(usernames,scores,solved,msg));
+        }
+        break;
+      case (content.startsWith("start-session")||content.startsWith("start session"))?content: '':
+        msg.react("🎯");
+        try {
+          let [cmd,count,difficulties="",title="Untitled"] = content.split(" ");
+          count = parseInt(count);
+          difficulties = difficulties.split("").map(d => parseInt(d));
+          questions = await getRandomProblems(count,difficulties);
+
+          msg.channel.send(EMBEDS.sessionEmbed(questions,msg.author.username,title));
+        }
+        catch(err){
+          msg.reply(REPLIES.sessionError)
         }
         break;
       default:

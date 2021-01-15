@@ -66,12 +66,36 @@ const inspirationEmbed = (content, author) => {
 
 }
 
+const sessionEmbed = (questions, author,title) => {
+	const getDifficultyIndicator = (difficulty) => {
+		return difficulty===1
+      ?"`Easy`"
+      :difficulty===2
+      ?"`Medium`"
+      :"`Hard`"
+	}
+	return new Discord.MessageEmbed()
+		.setColor("#f0058e")
+		.setTitle(title)
+		.setTimestamp()
+		.setDescription(`question solving session`)
+		.addFields (
+			...questions.map((question,i) => {
+				return {
+					name: `${i+1}. Question #${question.id} ${getDifficultyIndicator(question.difficulty)}`,
+					value: `[${question.title}](${question.link})`,
+				}
+			})
+		)
+}
+
 const EMBEDS = {
   questionEmbed,
 	leaderboardEmbed,
 	statusEmbed,
 	stuckEmbed,
-	inspirationEmbed
+	inspirationEmbed,
+	sessionEmbed
 };
 
 module.exports = EMBEDS;

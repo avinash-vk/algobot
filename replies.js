@@ -11,6 +11,7 @@ const REPLIES = {
   question_solve:"Wow, that's freaking great work. Keep grinding and keep it going.",
   question_unsolve:"Oof, that's alright. Things may not go your way always. Feel free to reach out to people in your discord servers who have solved this. Let's get that bread baby!",
   stuck:"Go ahead and tag em' to get to know how they solved the answers",
+  sessionError:"Oops looks like there's some kinda mistake in the way you're trying to start the session. Make sure its in the form: \n`;start-session <no-of-questions> <difficulties> <session-title>`\n If you have any doubts please do refer to the docs. Thanks!"
 }
 
 module.exports = REPLIES
