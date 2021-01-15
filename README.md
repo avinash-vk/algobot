@@ -6,6 +6,8 @@ AlgoBot is a discord bot that send you coding questions from well established on
 
 Checkout out all of the features below! :)
 
+Invite AlgoBot to your server from here - [Algobot](https://discord.com/api/oauth2/authorize?client_id=796353735437320202&permissions=8&scope=bot)
+
 ## Bot commands
 **Prefix**: ";"
 | Command | Feature |
