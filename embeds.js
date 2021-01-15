@@ -57,11 +57,21 @@ const stuckEmbed = (users, qno) => {
 		);
 }
 
+const inspirationEmbed = (content, author) => {
+	return new Discord.MessageEmbed()
+		.setColor("#ff7b00")
+		.addFields(
+			{ name: content, value: `- ${author}`}
+		)
+
+}
+
 const EMBEDS = {
   questionEmbed,
 	leaderboardEmbed,
 	statusEmbed,
-	stuckEmbed
+	stuckEmbed,
+	inspirationEmbed
 };
 
 module.exports = EMBEDS;

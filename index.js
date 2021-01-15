@@ -15,12 +15,34 @@ const getRandomProblem = require("./leetcodeScraper.js");
 
 // Firebase database config
 const firebase = require("./firebase");
-
+const axios = require("axios");
 /*
   *********** BOT COMMANDS ************
 */
 // Schedule how often
 // TODO SCHEDULED TASKS
+
+const TIME_HOURS = 2;
+const NOTIFICATIONS_CHANNEL = 'algobot-notifications';
+
+const fetchInspo = async () => {
+  let {content,author} = (await axios.get("https://api.quotable.io/random?tags=inspirational|future|technology")).data;
+  return EMBEDS.inspirationEmbed(content,author);
+}
+
+client.on('ready', () => {
+  console.log("BOT IS READY!");
+  setInterval( ()=>{
+    client.guilds.cache.map(async server => {
+      let channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL)
+      if(!channel)
+        await server.channels.create(NOTIFICATIONS_CHANNEL,"text")
+
+      channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL);
+      channel.send(await fetchInspo());
+    })
+  }, 1000*60*60*TIME_HOURS);
+})
 
 client.on('message', async msg => {
   if (msg && msg.content[0] === ";"){
