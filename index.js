@@ -19,10 +19,8 @@ const firebase = require("./firebase");
 /*
   *********** BOT COMMANDS ************
 */
-
-client.on('ready', () => {
-  console.log(`BOT READY!`);
-});
+// Schedule how often
+// TODO SCHEDULED TASKS
 
 client.on('message', async msg => {
   if (msg && msg.content[0] === ";"){
@@ -76,11 +74,25 @@ client.on('message', async msg => {
           msg.guild.members && msg.guild.members.cache.forEach(member => {
             if (member.id != client.user.id && !member.user.bot){
               member.send(REPLIES.challenge_all);
-              member.send(EMBEDS.questionEmbed({...question}));
-              msg.react("✅");
-              msg.react("❌");
-            }
-          });
+              member.send(EMBEDS.questionEmbed({...random_question})).then(question => {
+                question.react("✅");
+                question.react("❌");
+                const filter = (reaction, user) => {
+                    return (reaction.emoji.name == '✅' || reaction.emoji.name == '❌') && user.id != question.author.id;
+                }
+                const collector = question.createReactionCollector(filter, { time: 10800000 });
+                collector.on('collect', async (reaction, user) => {
+                  let emoji = reaction.emoji;
+                  if (emoji.name == '✅') {
+                      question.reply(REPLIES.question_solve);
+                      await firebase.SOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
+                  }
+                  else if (emoji.name == '❌') {
+                      question.reply(REPLIES.question_unsolve);
+                      await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
+                  }
+                });
+              });
         }
         break;
       case "my-status":
@@ -124,7 +136,6 @@ client.on('message', async msg => {
             }
           }
           catch(err) {
-            console.log(err)
             msg.reply(REPLIES.question_error)
           }
         }
