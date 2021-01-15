@@ -4,7 +4,7 @@ Hi. Is crippling depression and low self confidence making you anxious as placem
 
 AlgoBot is a discord bot that send you coding questions from well established online coding platforms(just leetcode for now) on to your servers, whenever you need it and helps you build a competitive platform among your peers. This would help yourself get motivated to solve questions and have fun while doing it. I know competitive coding might get boring but here's something that might make your experience a little bit better. Goodluck on those interviews.
 
-Checkout out all of the features below!
+Checkout out all of the features below! :)
 
 ## Bot commands
 **Prefix**: ";"
