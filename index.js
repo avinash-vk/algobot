@@ -92,7 +92,7 @@ client.on('message', async msg => {
         }
         else{
           msg.react("🖖🏻");
-          question = await getRandomProblem();
+          random_question = await getRandomProblem();
           msg.guild.members && msg.guild.members.cache.forEach(member => {
             if (member.id != client.user.id && !member.user.bot){
               member.send(REPLIES.challenge_all);
@@ -107,11 +107,11 @@ client.on('message', async msg => {
                   let emoji = reaction.emoji;
                   if (emoji.name == '✅') {
                       question.reply(REPLIES.question_solve);
-                      await firebase.SOLVE_QUESTION(question.id.toString(), user.id, question.difficulty*10);
+                      await firebase.SOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
                   }
                   else if (emoji.name == '❌') {
                       question.reply(REPLIES.question_unsolve);
-                      await firebase.UNSOLVE_QUESTION(question.id.toString(), user.id, question.difficulty*10);
+                      await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
                   }
               });
             })
