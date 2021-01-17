@@ -22,7 +22,7 @@ const axios = require("axios");
 // Schedule how often
 // TODO SCHEDULED TASKS
 
-const TIME_HOURS = 2;
+const TIME_HOURS = 6;
 const NOTIFICATIONS_CHANNEL = 'algobot-notifications';
 
 const fetchInspo = async () => {
@@ -107,11 +107,11 @@ client.on('message', async msg => {
                   let emoji = reaction.emoji;
                   if (emoji.name == '✅') {
                       question.reply(REPLIES.question_solve);
-                      await firebase.SOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
+                      await firebase.SOLVE_QUESTION(question.id.toString(), user.id, question.difficulty*10);
                   }
                   else if (emoji.name == '❌') {
                       question.reply(REPLIES.question_unsolve);
-                      await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, random_question.difficulty*10);
+                      await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, question.difficulty*10);
                   }
               });
             })
