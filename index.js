@@ -111,7 +111,7 @@ client.on('message', async msg => {
                   }
                   else if (emoji.name == '❌') {
                       question.reply(REPLIES.question_unsolve);
-                      await firebase.UNSOLVE_QUESTION(random_question.id.toString(), user.id, question.difficulty*10);
+                      await firebase.UNSOLVE_QUESTION(question.id.toString(), user.id, question.difficulty*10);
                   }
               });
             })
