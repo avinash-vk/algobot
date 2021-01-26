@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./algobot-creds.json");
+require("dotenv").config();
+const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT_CREDS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
