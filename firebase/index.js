@@ -87,7 +87,7 @@ const GET_QUESTION_STATUS = async (question_id) => {
 }
 
 const GET_LEADERBOARD = async (user_ids) => {
-  return await users.where("id","in",user_ids).get().then(docs => {
+  return await users.where("id","in",user_ids).orderBy("score", Query.Direction.DESCENDING).get().then(docs => {
     return docs.docs.map(doc => doc.data());
   }).catch(err => console.log(err));
 }
