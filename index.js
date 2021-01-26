@@ -204,7 +204,7 @@ client.on('message', async msg => {
             member => member.id
           );
           let stats = await firebase.GET_LEADERBOARD(members);
-          stats.sort((a,b)=>a.score>b.score?1:-1);
+          stats.sort((a,b)=>a.score>b.score?a.score<b.score?1:-1:0);
           let usernames = await Promise.all(stats.map(async stat => (await client.users.fetch(stat.id)).username))
           let scores = stats.map(stat => stat.score);
           let solved = stats.map(stat => stat.solved_count);
