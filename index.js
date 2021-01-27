@@ -70,8 +70,10 @@ client.on('message', async msg => {
         break;
       case "challenge-me":
       case "challenge me":
+      case content.startsWith("challenge-me")?content: '':
         msg.react("🖖🏻");
-        random_question = await getRandomProblem();
+        let [cmd,difficulty=-1] = content.split(" ");
+        random_question = await getRandomProblem(difficulty);
         msg.author.send(REPLIES.challenge_me);
         msg.author.send(EMBEDS.questionEmbed({...random_question})).then(question => {
           question.react("✅");
@@ -95,13 +97,15 @@ client.on('message', async msg => {
         break;
       case "challenge-all":
       case "challenge all":
+      case content.startsWith("challenge-all")?content: '':
         if (msg.channel.type === "dm"){
           msg.react("👎🏻");
           msg.reply(REPLIES.challenge_all_error);
         }
         else{
           msg.react("🖖🏻");
-          random_question = await getRandomProblem();
+          let [cmd,difficulty=-1] = content.split(" ");
+          random_question = await getRandomProblem(difficulty);
           const mems = await msg.guild.members.fetch()
           mems.forEach(member => {
             if (member.id != client.user.id && !member.user.bot){

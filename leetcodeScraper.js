@@ -3,7 +3,7 @@ const axios = require('axios');
 const ENDPOINT = "https://leetcode.com/api/problems/algorithms/"
 const ENDPOINT_LINK = "https://leetcode.com/problems/"
 
-const getRandomProblem = async () => {
+const getRandomProblem = async (difficulty) => {
   return await axios.get(ENDPOINT).then(resp => {
     // extracting questions count and number of questions from total questions.
     let questions = resp.data.stat_status_pairs
@@ -14,10 +14,14 @@ const getRandomProblem = async () => {
     // TODO: check whether question is solved or not
 
     let questions_count = questions.length
-
+    let index,question;
+    do {
+      index = Math.floor(Math.random() * questions_count);
+      question = questions[index]
+      if(difficulty===-1) break;
+    } while(difficulty!=question.difficulty.level)
     // choosing a random index from the lot
-    let index = Math.floor(Math.random() * questions_count);
-    let question = questions[index]
+    
     return {
       id: question.stat.question_id,
       title: question.stat.question__title,
