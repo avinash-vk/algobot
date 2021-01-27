@@ -24,7 +24,7 @@ const questionEmbed = ({id,link,title,difficulty}) => new Discord.MessageEmbed()
 const leaderboardEmbed = (usernames, scores, solved, msg) => {
 	let usernamesStr="", scoresStr="", solvedStr="";
 	for (let i = 0; i< usernames.length; i++) {
-		usernamesStr += `\`${i + 1}\` ${usernames[i]}\n`;
+		usernamesStr += `\`${i + 1}\` ${usernames[i]}${(i===0)?` ✨`:''}\n`;
 		scoresStr += `\`${scores[i]}\`\n`;
 		solvedStr += `\`${solved[i]}\`\n`;
 	}
