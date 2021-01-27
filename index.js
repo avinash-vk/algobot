@@ -21,7 +21,7 @@ const axios = require("axios");
 */
 // Schedule how often
 // TODO SCHEDULED TASKS
-
+let BLOCKED = [];
 const TIME_HOURS = 6;
 const NOTIFICATIONS_CHANNEL = 'algobot-notifications';
 
@@ -34,21 +34,30 @@ client.on('ready', () => {
   console.log("BOT IS READY!");
   setInterval( ()=>{
     client.guilds.cache.map(async server => {
-      let channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL)
-      if(!channel)
-        await server.channels.create(NOTIFICATIONS_CHANNEL,"text")
+      if (!BLOCKED.includes(server.id)){
+        let channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL)
+        if(!channel)
+          await server.channels.create(NOTIFICATIONS_CHANNEL,"text")
 
-      channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL);
-      channel.send(await fetchInspo());
+        channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL);
+        channel.send(await fetchInspo());
+      }
     })
   }, 1000*60*60*TIME_HOURS);
 })
 
 client.on('message', async msg => {
   if (msg && msg.content[0] === ";"){
-    let question;
     let content = msg.content.substring(1).trim().toLowerCase();
     switch(content){
+      case "block":
+        !BLOCKED.includes(msg.guild.id) && BLOCKED.push(msg.guild.id);
+        msg.channel.send(REPLIES.blocked);
+        break;
+      case "unblock":
+        BLOCKED.includes(msg.guild.id) && BLOCKED.splice(BLOCKED.indexOf(msg.guild.id),1);
+        msg.channel.send(REPLIES.unblocked);
+        break;
       case "intro":
         msg.channel.send(REPLIES.intro);
         break;
