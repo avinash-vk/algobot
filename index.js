@@ -93,8 +93,8 @@ client.on('message', async msg => {
         else{
           msg.react("🖖🏻");
           random_question = await getRandomProblem();
-          console.log(msg.guild.members)
-          msg.guild.members && msg.guild.members.cache.forEach(member => {
+          const mems = await msg.guild.members.fetch()
+          mems.forEach(member => {
             if (member.id != client.user.id && !member.user.bot){
               member.send(REPLIES.challenge_all);
               member.send(EMBEDS.questionEmbed({...random_question})).then(question => {
@@ -201,11 +201,13 @@ client.on('message', async msg => {
           msg.reply(REPLIES.question_dm);
         }
         else {
-          console.log(msg.guild.members)
-          let members = msg.guild.members && msg.guild.members.cache.map(
-            member => member.id
-          );
-          //console.log(members)
+          
+          const mems = await msg.guild.members.fetch()
+          let members =  mems.map(
+            member =>{
+              if (member.id != client.user.id && !member.user.bot) return member.id
+            } 
+          ).filter(stat => stat?1:0);
           let stats = await firebase.GET_LEADERBOARD(members);
           let statids = stats.map(stat => stat.id);
           let others = members.map(member => 
