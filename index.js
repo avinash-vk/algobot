@@ -93,6 +93,7 @@ client.on('message', async msg => {
         else{
           msg.react("🖖🏻");
           random_question = await getRandomProblem();
+          console.log(msg.guild.members)
           msg.guild.members && msg.guild.members.cache.forEach(member => {
             if (member.id != client.user.id && !member.user.bot){
               member.send(REPLIES.challenge_all);
@@ -200,10 +201,17 @@ client.on('message', async msg => {
           msg.reply(REPLIES.question_dm);
         }
         else {
+          console.log(msg.guild.members)
           let members = msg.guild.members && msg.guild.members.cache.map(
             member => member.id
           );
+          //console.log(members)
           let stats = await firebase.GET_LEADERBOARD(members);
+          let statids = stats.map(stat => stat.id);
+          let others = members.map(member => 
+            !statids.includes(member)?{id:member,score:0,solved_count:0}:null
+          ).filter(stat => stat?1:0);
+          stats.push(...others);
           stats.sort((a,b)=>a.score>b.score?a.score<b.score?1:-1:0);
           let usernames = await Promise.all(stats.map(async stat => (await client.users.fetch(stat.id)).username))
           let scores = stats.map(stat => stat.score);
