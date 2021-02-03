@@ -32,7 +32,7 @@ const fetchInspo = async () => {
 
 client.on('ready', () => {
   console.log("BOT IS READY!");
-  setInterval( ()=>{
+  /*setInterval( ()=>{
     client.guilds.cache.map(async server => {
       if (!BLOCKED.includes(server.id)){
         let channel = server.channels.cache.find(ch => ch.name == NOTIFICATIONS_CHANNEL)
@@ -43,7 +43,7 @@ client.on('ready', () => {
         channel.send(await fetchInspo());
       }
     })
-  }, 1000*60*60*TIME_HOURS);
+  }, 1000*60*60*TIME_HOURS);*/
 })
 
 client.on('message', async msg => {
@@ -95,7 +95,7 @@ client.on('message', async msg => {
           });
         });
         break;
-      case "challenge-all":
+      /*case "challenge-all":
       case "challenge all":
       case content.startsWith("challenge-all")?content: '':
         if (msg.channel.type === "dm"){
@@ -131,7 +131,7 @@ client.on('message', async msg => {
             })
           }
         })}
-        break;
+        break;*/
       case "my-status":
       case "my status":
         msg.react("🎯");
@@ -214,16 +214,16 @@ client.on('message', async msg => {
           msg.reply(REPLIES.question_dm);
         }
         else {
-          
+
           const mems = await msg.guild.members.fetch()
           let members =  mems.map(
             member =>{
               if (member.id != client.user.id && !member.user.bot) return member.id
-            } 
+            }
           ).filter(stat => stat?1:0);
           let stats = await firebase.GET_LEADERBOARD(members);
           let statids = stats.map(stat => stat.id);
-          let others = members.map(member => 
+          let others = members.map(member =>
             !statids.includes(member)?{id:member,score:0,solved_count:0}:null
           ).filter(stat => stat?1:0);
           stats.push(...others);
